@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./file-sharing  # React app context
+    ports:
+      - "3000:3000"  # Expose React app on port 3000
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:8000  # Backend API URL used by React app
+    depends_on:
+      - backend  # Frontend waits for the backend service to start
+
+  backend:
+    build:
+      context: ./secure_file_sharing  # Django app context
+    ports:
+      - "8000:8000"  # Expose Django app on port 8000
+    environment:
+      - DJANGO_DEBUG=True  # Example of an environment variable for Django
+      - DATABASE_URL=sqlite:///db.sqlite3  # Using SQLite for database
+    volumes:
+      - ./secure_file_sharing:/usr/src/app  # Mount backend code
